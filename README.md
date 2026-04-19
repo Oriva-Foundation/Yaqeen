@@ -162,7 +162,7 @@ See the [CONTRIBUTING.md](CONTRIBUTING.md) file for detailed development guideli
 - Git workflow and branching strategy
 - Submitting pull requests
 
-## 🎨 Screenshots
+##  Screenshots
 
 > Add screenshots here showcasing key features:
 > - Quranic interface with tafsir
@@ -173,6 +173,16 @@ See the [CONTRIBUTING.md](CONTRIBUTING.md) file for detailed development guideli
 > - Prayer times feature
 
 *Screenshots coming soon - see the [Design](design/) folder for mockups and wireframes*
+
+## UI Design
+
+<img src ="design/2.jpeg">
+<img src ="design/3.jpeg">
+<img src ="design/4.jpeg">
+<img src ="design/5.jpeg">
+<img src ="design/6.jpeg">
+<img src ="design/1.jpeg">
+
 
 ## 🤝 Contributing
 
