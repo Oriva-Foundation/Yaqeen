@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Header = ({ activeTab = 'الرئيسية' }) => {
   const navLinks = ['عن المنصة', 'المقالات', 'التفسير', 'الحديث', 'القرآن', 'الرئيسية'];
 
@@ -12,17 +10,16 @@ const Header = ({ activeTab = 'الرئيسية' }) => {
 
       <nav dir="rtl" className="hidden md:flex items-center gap-8">
         {navLinks.map((link) => (
-          <a
+          <span
             key={link}
-            href="#"
-            className={`pb-2 text-sm font-medium transition-colors ${
+            className={`pb-2 text-sm font-medium transition-colors cursor-pointer ${
               activeTab === link
                 ? 'text-[#169b8b] border-b-2 border-[#169b8b]' 
                 : 'text-gray-600 hover:text-[#0a4240]'
             }`}
           >
             {link}
-          </a>
+          </span>
         ))}
       </nav>
 
