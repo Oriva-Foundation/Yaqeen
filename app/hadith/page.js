@@ -1,8 +1,12 @@
 import Link from 'next/link';
+import Header from '../components/Header.jsx';
+import Footer from '../components/Footer.jsx';
 
 export default function HadithPage() {
   return (
     <main className="min-h-screen bg-white">
+    <Header activeTab="الحديث"/>
+
       {/* Back Button */}
       <div className="bg-[#0a4240] text-white py-6 px-6 md:px-12">
         <Link href="/" className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity">
@@ -94,20 +98,22 @@ export default function HadithPage() {
           <h2 className="text-3xl font-bold text-[#0a4240] mb-12 text-center">مصادر الحديث</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
-              { name: 'صحيح البخاري', count: '7,275', reliability: 'صحيح' },
-              { name: 'صحيح مسلم', count: '5,033', reliability: 'صحيح' },
-              { name: 'سنن الترمذي', count: '3,956', reliability: 'متنوع' },
-              { name: 'سنن ابن ماجة', count: '4,341', reliability: 'متنوع' },
-              { name: 'سنن النسائي', count: '5,270', reliability: 'صحيح' },
-              { name: 'سنن أبي داود', count: '5,274', reliability: 'متنوع' },
+              { name: 'صحيح البخاري', slug: 'sahih-al-bukhari', count: '7,275', reliability: 'صحيح' },
+              { name: 'صحيح مسلم', slug: 'sahih-muslim', count: '5,033', reliability: 'صحيح' },
+              { name: 'سنن الترمذي', slug: 'sunan-al-tirmidhi', count: '3,956', reliability: 'متنوع' },
+              { name: 'سنن ابن ماجة', slug: 'sunan-ibn-majah', count: '4,341', reliability: 'متنوع' },
+              { name: 'سنن النسائي', slug: 'sunan-al-nasai', count: '5,270', reliability: 'صحيح' },
+              { name: 'سنن أبي داود', slug: 'sunan-abi-dawood', count: '5,274', reliability: 'متنوع' },
             ].map((collection, idx) => (
-              <div key={idx} className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
-                <h3 className="text-lg font-bold text-[#0a4240] mb-2">{collection.name}</h3>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-blue-600 font-medium">{collection.count} حديث</span>
-                  <span className="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full">{collection.reliability}</span>
+              <Link key={idx} href={`/hadith/${collection.slug}`} className="block">
+                <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer">
+                  <h3 className="text-lg font-bold text-[#0a4240] mb-2">{collection.name}</h3>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-blue-600 font-medium">{collection.count} حديث</span>
+                    <span className="text-xs bg-blue-100 text-blue-800 px-3 py-1 rounded-full">{collection.reliability}</span>
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
@@ -125,6 +131,7 @@ export default function HadithPage() {
           </button>
         </div>
       </section>
+      <Footer/>
     </main>
   );
 }

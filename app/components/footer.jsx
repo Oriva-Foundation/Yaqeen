@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Footer = () => {
   const footerLinks = ['رؤيتنا', 'رسالتنا', 'اتصل بنا', 'سياسة الخصوصية'];
 
@@ -12,9 +10,9 @@ const Footer = () => {
 
       <nav dir="rtl" className="flex flex-wrap justify-center gap-6 mb-4 md:mb-0">
         {footerLinks.map((link) => (
-          <a key={link} href="#" className="text-sm text-gray-500 hover:text-[#0a4240] transition-colors font-medium">
+          <span key={link} className="text-sm text-gray-500 hover:text-[#0a4240] transition-colors font-medium cursor-pointer">
             {link}
-          </a>
+          </span>
         ))}
       </nav>
 

@@ -1,7 +1,14 @@
-import React from 'react';
+import Link from 'next/link';
 
 const Header = ({ activeTab = 'الرئيسية' }) => {
-  const navLinks = ['عن المنصة', 'المقالات', 'التفسير', 'الحديث', 'القرآن', 'الرئيسية'];
+  const navLinks = [
+    { name: 'عن المنصة', href: '/adhkar' },
+    { name: 'المقالات', href: '/articles' },
+    { name: 'التفسير', href: '/tafsir' },
+    { name: 'الحديث', href: '/hadith' },
+    { name: 'القرآن', href: '/quran' },
+    { name: 'الرئيسية', href: '/' },
+  ];
 
   return (
     <header className="flex items-center justify-between px-8 py-5 bg-white border-b border-gray-100">
@@ -12,17 +19,17 @@ const Header = ({ activeTab = 'الرئيسية' }) => {
 
       <nav dir="rtl" className="hidden md:flex items-center gap-8">
         {navLinks.map((link) => (
-          <a
-            key={link}
-            href="#"
-            className={`pb-2 text-sm font-medium transition-colors ${
-              activeTab === link
+          <Link
+            key={link.name}
+            href={link.href}
+            className={`pb-2 text-sm font-medium transition-colors cursor-pointer ${
+              activeTab === link.name
                 ? 'text-[#169b8b] border-b-2 border-[#169b8b]' 
                 : 'text-gray-600 hover:text-[#0a4240]'
             }`}
           >
-            {link}
-          </a>
+            {link.name}
+          </Link>
         ))}
       </nav>
 
