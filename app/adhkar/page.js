@@ -1,12 +1,11 @@
 import Link from 'next/link';
-import Header from '../components/Header.jsx';
-import Footer from '../components/Footer.jsx';
+import Header from '../components/header.jsx';
+import Footer from '../components/footer.jsx';
 
 export default function AdhkarPage() {
   return (
     <main className="min-h-screen bg-white">
       <Header activeTab="عن المنصة"/>
-      {/* Back Button */}
       <div className="bg-[#0a4240] text-white py-6 px-6 md:px-12">
         <Link href="/" className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -117,20 +116,22 @@ export default function AdhkarPage() {
           <h2 className="text-3xl font-bold text-[#0a4240] mb-12 text-center">فئات الأذكار</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { name: 'أذكار الصباح', desc: 'الأذكار المشروعة عند بداية اليوم' },
-              { name: 'أذكار المساء', desc: 'الأذكار المشروعة عند نهاية اليوم' },
-              { name: 'أذكار النوم', desc: 'الأذكار المشروعة قبل النوم' },
-              { name: 'أذكار الاستيقاظ', desc: 'الأذكار المشروعة عند الاستيقاظ' },
-              { name: 'أذكار الطعام', desc: 'الأذكار عند الأكل والشرب' },
-              { name: 'أذكار المسجد', desc: 'الأذكار المشروعة في المسجد' },
-              { name: 'دعاء ختم القرآن', desc: 'الدعاء المستحب عند ختم القرآن' },
-              { name: 'أدعية الاستسقاء', desc: 'الأدعية عند طلب المطر' },
-              { name: 'أدعية الشفاء', desc: 'أدعية للدعاء على المريض' },
+              { name: 'أذكار الصباح', slug: 'morning-adhkar', desc: 'الأذكار المشروعة عند بداية اليوم' },
+              { name: 'أذكار المساء', slug: 'evening-adhkar', desc: 'الأذكار المشروعة عند نهاية اليوم' },
+              { name: 'أذكار النوم', slug: 'sleep-adhkar', desc: 'الأذكار المشروعة قبل النوم' },
+              { name: 'أذكار الاستيقاظ', slug: 'waking-adhkar', desc: 'الأذكار المشروعة عند الاستيقاظ' },
+              { name: 'أذكار الطعام', slug: 'meal-adhkar', desc: 'الأذكار عند الأكل والشرب' },
+              { name: 'أذكار المسجد', slug: 'mosque-adhkar', desc: 'الأذكار المشروعة في المسجد' },
+              { name: 'دعاء ختم القرآن', slug: 'quran-completion-dua', desc: 'الدعاء المستحب عند ختم القرآن' },
+              { name: 'أدعية الاستسقاء', slug: 'rain-dua', desc: 'الأدعية عند طلب المطر' },
+              { name: 'أدعية الشفاء', slug: 'healing-dua', desc: 'أدعية للدعاء على المريض' },
             ].map((category, idx) => (
-              <div key={idx} className="bg-white p-6 rounded-lg border border-emerald-200 hover:shadow-lg transition-shadow cursor-pointer">
-                <h3 className="text-lg font-bold text-[#0a4240] mb-2">{category.name}</h3>
-                <p className="text-sm text-gray-600">{category.desc}</p>
-              </div>
+              <Link key={idx} href={`/adhkar/${category.slug}`} className="block">
+                <div className="bg-white p-6 rounded-lg border border-emerald-200 hover:shadow-lg transition-shadow cursor-pointer">
+                  <h3 className="text-lg font-bold text-[#0a4240] mb-2">{category.name}</h3>
+                  <p className="text-sm text-gray-600">{category.desc}</p>
+                </div>
+              </Link>
             ))}
           </div>
         </div>

@@ -1,11 +1,26 @@
 import Link from 'next/link';
-import Header from '../components/Header.jsx';
-import Footer from '../components/Footer.jsx';
+import Header from '../components/header.jsx';
+import Footer from '../components/footer.jsx';
+
+// All 114 Surahs of the Quran
+const surahs = [
+  { number: 1, name: 'الفاتحة', englishName: 'Al-Fatiha', verses: 7, revelation: 'Meccan' },
+  { number: 2, name: 'البقرة', englishName: 'Al-Baqarah', verses: 286, revelation: 'Medinan' },
+  { number: 3, name: 'آل عمران', englishName: 'Ali Imran', verses: 200, revelation: 'Medinan' },
+  { number: 4, name: 'النساء', englishName: 'An-Nisa', verses: 176, revelation: 'Medinan' },
+  { number: 5, name: 'المائدة', englishName: 'Al-Maidah', verses: 120, revelation: 'Medinan' },
+  { number: 6, name: 'الأنعام', englishName: 'Al-Anam', verses: 165, revelation: 'Meccan' },
+  { number: 7, name: 'الأعراف', englishName: 'Al-Araf', verses: 206, revelation: 'Meccan' },
+  { number: 8, name: 'الأنفال', englishName: 'Al-Anfal', verses: 75, revelation: 'Medinan' },
+  { number: 9, name: 'التوبة', englishName: 'At-Tawbah', verses: 129, revelation: 'Medinan' },
+  { number: 10, name: 'يونس', englishName: 'Yunus', verses: 109, revelation: 'Meccan' },
+];
 
 export default function QuranPage() {
   return (
     <main className="min-h-screen bg-white">
-      <Header activeTab="القرآن"/>
+      <Header activeTab="القرآن" />
+
       {/* Back Button */}
       <div className="bg-[#0a4240] text-white py-6 px-6 md:px-12">
         <Link href="/" className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity">
@@ -91,6 +106,32 @@ export default function QuranPage() {
         </div>
       </section>
 
+      {/* Surahs Grid */}
+      <section className="bg-gray-50 py-16 px-6 md:px-12">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-[#0a4240] mb-12 text-center">السور</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {surahs.map((surah) => (
+              <Link key={surah.number} href={`/quran/surah-${surah.number}`} className="block">
+                <div className="bg-white p-6 rounded-lg border border-teal-200 hover:shadow-lg transition-shadow cursor-pointer">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <h3 className="text-lg font-bold text-[#0a4240]">{surah.name}</h3>
+                      <p className="text-sm text-teal-600 font-medium">{surah.englishName}</p>
+                    </div>
+                    <span className="bg-teal-100 text-teal-800 text-xs font-bold px-3 py-1 rounded-full">{surah.number}</span>
+                  </div>
+                  <div className="flex justify-between text-xs text-gray-600">
+                    <span>{surah.verses} آية</span>
+                    <span>{surah.revelation}</span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Call to Action */}
       <section className="bg-[#0a4240] text-white py-16 px-6 md:px-12">
         <div className="max-w-3xl mx-auto text-center">
@@ -103,7 +144,7 @@ export default function QuranPage() {
           </button>
         </div>
       </section>
-      <Footer/>
+      <Footer />
     </main>
   );
 }

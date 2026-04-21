@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import Header from '../components/Header.jsx';
-import Footer from '../components/Footer.jsx';
+import Header from '../components/header.jsx';
+import Footer from '../components/footer.jsx';
 export default function TafsirPage() {
   return (
     <main className="min-h-screen bg-white">
@@ -96,16 +96,18 @@ export default function TafsirPage() {
           <h2 className="text-3xl font-bold text-[#0a4240] mb-12 text-center">أشهر التفاسير</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
-              { name: 'تفسير السعدي', author: 'عبد الرحمن السعدي', desc: 'تفسير ميسر وشامل مشهور' },
-              { name: 'تفسير الجلالين', author: 'الجلالين', desc: 'تفسير مختصر وعميق' },
-              { name: 'تفسير ابن كثير', author: 'إسماعيل بن كثير', desc: 'من أشهر التفاسير الأثرية' },
-              { name: 'تفسير الطبري', author: 'محمد بن جرير الطبري', desc: 'أقدم التفاسير المسندة' },
+              { name: 'تفسير السعدي', slug: 'tafsir-al-saadi', author: 'عبد الرحمن السعدي', desc: 'تفسير ميسر وشامل مشهور' },
+              { name: 'تفسير الجلالين', slug: 'tafsir-al-jalalayn', author: 'الجلالين', desc: 'تفسير مختصر وعميق' },
+              { name: 'تفسير ابن كثير', slug: 'tafsir-ibn-kathir', author: 'إسماعيل بن كثير', desc: 'من أشهر التفاسير الأثرية' },
+              { name: 'تفسير الطبري', slug: 'tafsir-al-tabari', author: 'محمد بن جرير الطبري', desc: 'أقدم التفاسير المسندة' },
             ].map((tafsir, idx) => (
-              <div key={idx} className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow">
-                <h3 className="text-lg font-bold text-[#0a4240] mb-2">{tafsir.name}</h3>
-                <p className="text-sm text-amber-700 font-medium mb-2">{tafsir.author}</p>
-                <p className="text-gray-600">{tafsir.desc}</p>
-              </div>
+              <Link key={idx} href={`/tafsir/${tafsir.slug}`} className="block">
+                <div className="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow cursor-pointer">
+                  <h3 className="text-lg font-bold text-[#0a4240] mb-2">{tafsir.name}</h3>
+                  <p className="text-sm text-amber-700 font-medium mb-2">{tafsir.author}</p>
+                  <p className="text-gray-600">{tafsir.desc}</p>
+                </div>
+              </Link>
             ))}
           </div>
         </div>

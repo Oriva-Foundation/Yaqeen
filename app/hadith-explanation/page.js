@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import Header from '../components/Header.jsx';
-import Footer from '../components/Footer.jsx';
+import Header from '../components/header.jsx';
+import Footer from '../components/footer.jsx';
 
 export default function HadithExplanationPage() {
   return (

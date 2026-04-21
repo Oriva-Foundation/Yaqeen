@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-import Header from './components/Header.jsx'; 
-import Footer from './components/Footer.jsx';
+import Header from './components/header.jsx'; 
+import Footer from './components/footer.jsx';
 import HeroSection from './components/HeroSection.jsx';
 
 export default function App() {
