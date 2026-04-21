@@ -1,8 +1,11 @@
 import Link from 'next/link';
+import Header from '../components/Header.jsx';
+import Footer from '../components/Footer.jsx';
 
 export default function QuranPage() {
   return (
     <main className="min-h-screen bg-white">
+      <Header activeTab="القرآن"/>
       {/* Back Button */}
       <div className="bg-[#0a4240] text-white py-6 px-6 md:px-12">
         <Link href="/" className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity">
@@ -100,6 +103,7 @@ export default function QuranPage() {
           </button>
         </div>
       </section>
+      <Footer/>
     </main>
   );
 }
