@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Header from '../../components/header.jsx';
 import Footer from '../../components/footer.jsx';
 import { useState, useEffect, use } from 'react';
+import html2canvas from 'html2canvas';
 
 const bookData = {
   'sahih-al-bukhari': { name: 'صحيح البخاري', count: '7,275', reliability: 'صحيح' },
@@ -21,14 +22,17 @@ export default function HadithBookPage({ params }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredHadiths, setFilteredHadiths] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 20;
 
   useEffect(() => {
     async function fetchHadiths() {
       try {
         const response = await fetch(`/api/hadith/${slug}`);
         const data = await response.json();
-        setAllHadiths(data);
-        setFilteredHadiths(data);
+        const filteredData = data.filter(hadith => hadith.text && hadith.text.trim() !== '');
+        setAllHadiths(filteredData);
+        setFilteredHadiths(filteredData);
       } catch (error) {
         console.error('Error fetching hadiths:', error);
       } finally {
@@ -40,17 +44,14 @@ export default function HadithBookPage({ params }) {
     }
   }, [slug]);
 
-  // Group hadiths by chapterId
-  const chapters = {};
-  filteredHadiths.forEach(hadith => {
-    if (!chapters[hadith.chapterId]) {
-      chapters[hadith.chapterId] = [];
-    }
-    chapters[hadith.chapterId].push(hadith);
-  });
+  const totalPages = Math.ceil(filteredHadiths.length / pageSize);
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+  const currentHadiths = filteredHadiths.slice(startIndex, endIndex);
 
   const handleSearch = (term) => {
     setSearchTerm(term);
+    setCurrentPage(1);
     if (term.trim() === '') {
       setFilteredHadiths(allHadiths);
     } else {
@@ -67,6 +68,52 @@ export default function HadithBookPage({ params }) {
         return normalizedText.includes(normalizedTerm);
       });
       setFilteredHadiths(filtered);
+    }
+  };
+
+  const handleShare = async (hadith) => {
+    const text = `الحديث رقم ${hadith.id} من ${book.name}:\n\n${hadith.text}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `حديث من ${book.name}`,
+          text: text,
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+      }
+    } else {
+      // Fallback: copy to clipboard
+      navigator.clipboard.writeText(text);
+      alert('تم نسخ الحديث إلى الحافظة');
+    }
+  };
+
+  const handleCopy = async (hadith) => {
+    const text = hadith.text;
+    try {
+      await navigator.clipboard.writeText(text);
+      alert('تم نسخ الحديث إلى الحافظة');
+    } catch (error) {
+      console.error('Error copying:', error);
+    }
+  };
+
+  const handleDownloadImage = async (hadithId) => {
+    const element = document.getElementById(`hadith-card-${hadithId}`);
+    if (element) {
+      try {
+        const canvas = await html2canvas(element, {
+          backgroundColor: '#ffffff',
+          scale: 2,
+        });
+        const link = document.createElement('a');
+        link.download = `hadith-${hadithId}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+      } catch (error) {
+        console.error('Error generating image:', error);
+      }
     }
   };
 
@@ -116,7 +163,7 @@ export default function HadithBookPage({ params }) {
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-extrabold text-[#0a4240] mb-4">{book.name}</h1>
           <p className="text-lg text-gray-700 leading-relaxed">
-            {allHadiths.length} حديث • {book.reliability}
+            {allHadiths.length} حديث • {book.reliability} • الصفحة {currentPage} من {totalPages}
           </p>
         </div>
       </section>
@@ -147,37 +194,95 @@ export default function HadithBookPage({ params }) {
 
       {/* Hadiths */}
       <section className="py-16 px-6 md:px-12 max-w-6xl mx-auto">
-        {Object.keys(chapters).length === 0 ? (
+        {currentHadiths.length === 0 ? (
           <div className="text-center">
             <p className="text-gray-600">لا توجد أحاديث مطابقة للبحث.</p>
           </div>
         ) : (
-          Object.keys(chapters).map(chapterId => (
-            <div key={chapterId} className="mb-12">
-              <h2 className="text-2xl font-bold text-[#0a4240] mb-6 border-b-2 border-[#0a4240] pb-2">الباب {chapterId}</h2>
-              <div className="space-y-6">
-                {chapters[chapterId].map((hadith, index) => (
-                  <div key={`${chapterId}-${hadith.id}-${index}`} className="group bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-[#0a4240]/30 hover:scale-[1.02]">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-[#0a4240] rounded-full flex items-center justify-center">
-                          <span className="text-white text-sm font-bold">{hadith.id}</span>
-                        </div>
-                        <span className="text-sm text-gray-600 font-medium">الحديث رقم {hadith.id}</span>
-                      </div>
-                      <div className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">
-                        الباب {chapterId}
-                      </div>
+          <div className="space-y-6">
+            {currentHadiths.map((hadith, index) => (
+              <div key={`${hadith.id}-${index}`} id={`hadith-card-${hadith.id}`} className="group bg-gradient-to-br from-white to-gray-50 border border-gray-200 rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:border-[#0a4240]/30 hover:scale-[1.02]">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 bg-[#0a4240] rounded-full flex items-center justify-center">
+                      <span className="text-white text-sm font-bold">{hadith.id}</span>
                     </div>
-                    <div className="relative">
-                      <p className="text-gray-800 leading-relaxed text-right text-lg" dir="rtl">{hadith.text}</p>
-                      <div className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-[#0a4240] to-transparent rounded-l-lg opacity-20 group-hover:opacity-40 transition-opacity"></div>
-                    </div>
+                    <span className="text-sm text-gray-600 font-medium">الحديث رقم {hadith.id}</span>
                   </div>
-                ))}
+                  <div className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">
+                    الباب {hadith.chapterId}
+                  </div>
+                </div>
+                <div className="relative mb-6">
+                  <p className="text-gray-800 leading-relaxed text-right text-lg" dir="rtl">{hadith.text}</p>
+                  <div className="absolute top-0 right-0 w-1 h-full bg-gradient-to-b from-[#0a4240] to-transparent rounded-l-lg opacity-20 group-hover:opacity-40 transition-opacity"></div>
+                </div>
+                <div className="flex justify-center gap-4">
+                  <button
+                    onClick={() => handleShare(hadith)}
+                    className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                    </svg>
+                    مشاركة
+                  </button>
+                  <button
+                    onClick={() => handleCopy(hadith)}
+                    className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                    نسخ
+                  </button>
+                  <button
+                    onClick={() => handleDownloadImage(hadith.id)}
+                    className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    تحميل كصورة
+                  </button>
+                </div>
               </div>
+            ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-12">
+            <div className="flex gap-2">
+              <button
+                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 bg-[#0a4240] text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#0a4240]/80"
+              >
+                السابق
+              </button>
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                const page = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+                return (
+                  <button
+                    key={page}
+                    onClick={() => setCurrentPage(page)}
+                    className={`px-4 py-2 rounded-lg ${page === currentPage ? 'bg-[#0a4240] text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                  >
+                    {page}
+                  </button>
+                );
+              })}
+              <button
+                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 bg-[#0a4240] text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#0a4240]/80"
+              >
+                التالي
+              </button>
             </div>
-          ))
+          </div>
         )}
       </section>
 
