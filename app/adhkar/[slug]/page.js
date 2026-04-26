@@ -21,7 +21,7 @@ export default function AdhkarCategoryPage({ params }) {
   if (!category) {
     return (
       <main className="min-h-screen bg-white">
-        <Header activeTab="عن المنصة" />
+        <Header activeTab="الأذكار" />
         <div className="flex items-center justify-center min-h-screen">
           <h1 className="text-2xl font-bold text-gray-800">الفئة غير موجودة</h1>
         </div>
@@ -32,7 +32,7 @@ export default function AdhkarCategoryPage({ params }) {
 
   return (
     <main className="min-h-screen bg-white">
-      <Header activeTab="عن المنصة" />
+      <Header activeTab="الأذكار" />
 
       {/* Back Button */}
       <div className="bg-[#0a4240] text-white py-6 px-6 md:px-12">

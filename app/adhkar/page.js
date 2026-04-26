@@ -5,7 +5,7 @@ import Footer from '../components/footer.jsx';
 export default function AdhkarPage() {
   return (
     <main className="min-h-screen bg-white">
-      <Header activeTab="عن المنصة"/>
+      <Header activeTab="الأذكار" />
       <div className="bg-[#0a4240] text-white py-6 px-6 md:px-12">
         <Link href="/" className="inline-flex items-center gap-2 hover:opacity-80 transition-opacity">
           <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
